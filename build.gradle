@@ -1,3 +1,5 @@
+import jdk.internal.jshell.tool.resources.version
+
 /**
  * Top-level build file for ftc_app project.
  *
@@ -21,9 +23,50 @@ allprojects {
     repositories {
         mavenCentral()
         google()
+        jcenter()
     }
 }
+/*
 
 repositories {
     mavenCentral()
+    flatDir{
+        dirs '../libs'
+    }
 }
+
+dependencies {
+    doc 'org.ftcinspires.ftc:Hardware:6.2.0'
+    doc 'org.ftcinspires.ftc:RobotCore:6.2.0'
+    doc 'org.ftcinspires.ftc:ftcCommon:6.2.0'
+    doc 'org.ftcinspires.ftc:OnBotJava:6.2.0'
+    doc 'org.ftcinspires.ftc:Inspection:6.2.0'
+}
+
+task extractJavadoc {
+    doLast {
+        def componentIds = configurations.doc.incoming.resolutionResult.allDependencies.collect{ it.selected.id }
+
+        def result = dependencies.createArtifactResolutionQuery()
+            .forComponents(componentIds)
+            .withArtifacts(JwmLibary, SourcesArtifact, JavadocArtifact)
+            .execute()
+
+        for (component in result.resolvedComponents){
+            component.getArtifacts(JavadocArtifact).each {artifact ->
+                def version = artifact.identifier.componentIdentfier.version
+                def libname = artifact.identifier.componentIdentfier.moduleIdentifier.name
+                copy {
+                    from zipTree(artifact:file)
+                    from "docs/$version/$libName/"
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation 'org.openftc:easyopencv:1.5.1'
+}
+
+ */

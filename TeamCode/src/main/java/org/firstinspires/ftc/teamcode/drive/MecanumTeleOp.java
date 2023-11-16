@@ -87,15 +87,15 @@ public class MecanumTeleOp extends LinearOpMode {
                 frontRight.setPower(.5);
                 backRight.setPower(.5);
             } else if (gamepad1.dpad_right) { //strafe right
-                frontLeft.setPower(1);
-                frontRight.setPower(-1);
-                backLeft.setPower(-1);
-                backRight.setPower(1);
+                frontLeft.setPower(.6);
+                frontRight.setPower(-.6);
+                backLeft.setPower(-.6);
+                backRight.setPower(.6);
             } else if (gamepad1.dpad_left) { //strafe left
-                frontLeft.setPower(-1);
-                frontRight.setPower(1);
-                backLeft.setPower(1);
-                backRight.setPower(-1);
+                frontLeft.setPower(-.6);
+                frontRight.setPower(.6);
+                backLeft.setPower(.6);
+                backRight.setPower(-.6);
             } else if (gamepad1.dpad_up) { // forwards
                 frontLeft.setPower(0.65);
                 frontRight.setPower(0.65);
