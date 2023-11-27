@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.auto;
 
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -37,10 +38,14 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.OpenCV.CVMaster;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.List;
+
+
 
 /*
  * This OpMode illustrates the basics of TensorFlow Object Detection,
@@ -52,12 +57,23 @@ import java.util.List;
 @Autonomous(name = "Blueleft ", group = "Concept")
 public class BlueLeft extends LinearOpMode {
 
+
+    public int pos = 0;
+
+    private LinearOpMode op;
+
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
     private DcMotor backRight = null;
     private DcMotor backLeft = null;
 
     private DcMotor Intake = null;
+
+
+
+
+    private OpenCvWebcam webcam;
+
 
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
@@ -82,6 +98,9 @@ public class BlueLeft extends LinearOpMode {
      * The variable to store our instance of the vision portal.
      */
     private VisionPortal visionPortal;
+
+    private CVMaster cvMaster = new CVMaster();
+
 
     @Override
     public void runOpMode() {
@@ -113,6 +132,13 @@ public class BlueLeft extends LinearOpMode {
 
 
         // Run Auto
+
+
+        while(!isStarted()){
+            pos = cvMaster.getBlueLeftPosition();
+            telemetry.addData("spike pos", pos);
+            telemetry.update();
+        }
 
 
         driveBackward(1800,0.2);
@@ -155,6 +181,8 @@ public class BlueLeft extends LinearOpMode {
         visionPortal.close();
 
     }   // end runOpMode()
+
+
 
     /**
      * Initialize the TensorFlow Object Detection processor.
@@ -394,5 +422,6 @@ public class BlueLeft extends LinearOpMode {
         }
 
     }
+
 
 }   // end class
