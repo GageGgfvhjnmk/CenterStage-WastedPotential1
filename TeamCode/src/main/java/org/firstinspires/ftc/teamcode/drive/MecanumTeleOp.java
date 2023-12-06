@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.drive;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "OnePlayerMode")
 
@@ -19,8 +19,12 @@ public class MecanumTeleOp extends LinearOpMode {
 
     private DcMotor Intake = null;
 
+    private CRServo RightSlide = null;
 
-    //private Boolean clawClosed = true;
+    private CRServo LeftSlide = null;
+
+    private CRServo conveyor = null;
+
 
     @Override
     public void runOpMode() {
@@ -34,6 +38,12 @@ public class MecanumTeleOp extends LinearOpMode {
         backRight = hardwareMap.get(DcMotor.class,"backRight");  //backright, port 2
         Intake = hardwareMap.get(DcMotor.class,"Intake");  //Intake,
 
+        RightSlide = hardwareMap.get(CRServo.class,"RightSlide"); // Port 5 Expansion Hub
+        LeftSlide = hardwareMap.get(CRServo.class,"RightSlide"); // Port 0 Control Hub
+
+        conveyor = hardwareMap.get(CRServo.class,"conveyor");
+
+
 
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -41,6 +51,11 @@ public class MecanumTeleOp extends LinearOpMode {
         backLeft.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.FORWARD);
         Intake.setDirection(DcMotor.Direction.FORWARD);
+
+        RightSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+        LeftSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        conveyor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
         waitForStart();
@@ -108,8 +123,20 @@ public class MecanumTeleOp extends LinearOpMode {
                 backRight.setPower(-0.65);
             } else if (G1Y) { // Intake Forward
                 Intake.setPower(.5);
+                conveyor.setPower(.5);
             } else if (G1A) { // Intake Backward
                 Intake.setPower(-.5);
+                conveyor.setPower(-.5);
+
+            } else if (gamepad1.left_bumper) {
+                RightSlide.setPower(.5);
+                LeftSlide.setPower(.5);
+
+
+            } else if (gamepad1.right_bumper) {
+                RightSlide.setPower(-.5);
+                LeftSlide.setPower(-.5);
+                
 
 
             } else {
@@ -118,6 +145,8 @@ public class MecanumTeleOp extends LinearOpMode {
                 backLeft.setPower(0);
                 backRight.setPower(0);
                 Intake.setPower(0);
+                RightSlide.setPower(0);
+                LeftSlide.setPower(0);
             }
 
             telemetry.addData("Status", "Running");

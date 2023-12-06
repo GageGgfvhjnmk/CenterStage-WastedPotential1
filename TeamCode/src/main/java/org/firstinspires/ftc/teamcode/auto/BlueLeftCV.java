@@ -111,13 +111,14 @@ public class BlueLeftCV extends LinearOpMode {
             telemetry.update();
         }
 
-
+        /*
         driveBackward(1800,0.2);
         intake("intake");
         sleep(2200);
         intake("stop");
         strafeRight(3500,0.2);
         sleep(10000);
+         */
 
 
     }   // end runOpMode()

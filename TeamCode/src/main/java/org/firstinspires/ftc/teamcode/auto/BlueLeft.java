@@ -29,23 +29,19 @@
 
 package org.firstinspires.ftc.teamcode.auto;
 
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.teamcode.OpenCV.CVMaster;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
-import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.List;
-
-
 
 /*
  * This OpMode illustrates the basics of TensorFlow Object Detection,
@@ -54,13 +50,8 @@ import java.util.List;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
-@Autonomous(name = "Blueleft ", group = "Concept")
+@Autonomous(name = "BlueLeft", group = "Concept")
 public class BlueLeft extends LinearOpMode {
-
-
-    public int pos = 0;
-
-    private LinearOpMode op;
 
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
@@ -69,11 +60,11 @@ public class BlueLeft extends LinearOpMode {
 
     private DcMotor Intake = null;
 
+    private CRServo RightSlide = null;
 
+    private CRServo LeftSlide = null;
 
-
-    private OpenCvWebcam webcam;
-
+    private CRServo conveyor = null;
 
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
@@ -99,9 +90,6 @@ public class BlueLeft extends LinearOpMode {
      */
     private VisionPortal visionPortal;
 
-    private CVMaster cvMaster = new CVMaster();
-
-
     @Override
     public void runOpMode() {
 
@@ -111,7 +99,12 @@ public class BlueLeft extends LinearOpMode {
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
-        Intake = hardwareMap.get(DcMotor.class, "Intake");
+        Intake = hardwareMap.get(DcMotor.class,"Intake");  //Intake,
+
+        RightSlide = hardwareMap.get(CRServo.class,"RightSlide"); // Port 5 Expansion Hub
+        LeftSlide = hardwareMap.get(CRServo.class,"RightSlide"); // Port 0 Control Hub
+
+        conveyor = hardwareMap.get(CRServo.class,"conveyor");
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -123,35 +116,11 @@ public class BlueLeft extends LinearOpMode {
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
-
         // Wait for the DS start button to be touched.
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
         waitForStart();
-
-
-        // Run Auto
-
-
-        while(!isStarted()){
-            pos = cvMaster.getBlueLeftPosition();
-            telemetry.addData("spike pos", pos);
-            telemetry.update();
-        }
-
-
-        driveBackward(1800,0.2);
-        intake("intake");
-        sleep(2200);
-        intake("stop");
-        strafeRight(3500,0.2);
-        sleep(10000);
-
-
-
-
-
 
 
 
@@ -164,6 +133,34 @@ public class BlueLeft extends LinearOpMode {
 
                 // Push telemetry to the Driver Station.
                 telemetry.update();
+
+                if (spikeLocation() == 3) {
+                    driveBackward(800,0.2);
+                    sleep(1000);
+                    turn(1000,-0.2); // Probably wont work
+                    sleep(2200);
+                    driveForward(3000,0.2);
+                    sleep(10000);
+
+
+                } else if (spikeLocation() == 2) {
+                    driveBackward(1750,0.2);
+                    sleep(2200);
+                    driveForward(100,0.2);
+                    strafeRight(3500,0.2);
+                    sleep(10000);
+
+
+                } else {
+                    driveBackward(200,0.2);
+                    strafeRight(300,0.2);
+                    driveBackward(1600,0.2);
+                    driveForward(200,0.2);
+                    strafeRight(3500,0.2);
+                    sleep(10000);
+
+
+                }
 
                 // Save CPU resources; can resume streaming when needed.
                 if (gamepad1.dpad_down) {
@@ -181,8 +178,6 @@ public class BlueLeft extends LinearOpMode {
         visionPortal.close();
 
     }   // end runOpMode()
-
-
 
     /**
      * Initialize the TensorFlow Object Detection processor.
@@ -261,16 +256,7 @@ public class BlueLeft extends LinearOpMode {
             double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
             double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
 
-            driveBackward(100, 0.1);
 
-            if (recognition.getLeft() <= 322) {
-                telemetry.addData("Position: ", "center");
-
-            } else if (recognition.getLeft() > 322) {
-                telemetry.addData("Position: ", "right");
-            } else {
-                telemetry.addData("Position: ", "left");
-            }
 
             telemetry.addData(""," ");
             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
@@ -291,6 +277,9 @@ public class BlueLeft extends LinearOpMode {
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
         frontLeft.setPower(power);
         frontRight.setPower(power);
@@ -327,13 +316,15 @@ public class BlueLeft extends LinearOpMode {
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         frontLeft.setPower(power);
         frontRight.setPower(-power);
         backLeft.setPower(-power);
         backRight.setPower(power);
 
-        while (   frontRight.getCurrentPosition() < distance) {
+        while (-frontRight.getCurrentPosition() < distance) {
             telemetry.addData("Left Encoder", frontRight.getCurrentPosition());
             telemetry.update();
         }
@@ -357,6 +348,8 @@ public class BlueLeft extends LinearOpMode {
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         frontLeft.setPower(-power);
         frontRight.setPower(power);
@@ -389,6 +382,8 @@ public class BlueLeft extends LinearOpMode {
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         frontLeft.setPower(-power);
         frontRight.setPower(-power);
@@ -422,6 +417,65 @@ public class BlueLeft extends LinearOpMode {
         }
 
     }
+    private double spikeLocation() {
+
+        List<Recognition> currentRecognitions = tfod.getRecognitions();
+
+        double location = 1;
+
+        for (Recognition recognition : currentRecognitions) {
+
+            if (recognition.getLeft() <= 322) {
+                location = 2;
+                telemetry.addData("Spike mark location: ", "center");
+            } else if (recognition.getLeft() > 322) {
+                location = 3;
+                telemetry.addData("Spike mark location: ", "right");
+            } else {
+                location = 1;
+                telemetry.addData("Spike mark location: ", "left");
+            }
+
+        }   // end for() loop
+
+        return location;
+    }
+    public void turn(double distance, double power) {
+
+        //Reset Encoders
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
-}   // end class
+        frontLeft.setPower(-power);
+        frontRight.setPower(power);
+        backLeft.setPower(-power);
+        backRight.setPower(power);
+
+        while (frontRight.getCurrentPosition() < (distance - 10)) {
+            telemetry.addData("Left Encoder", frontRight.getCurrentPosition());
+            telemetry.update();
+        }
+
+        while (frontRight.getCurrentPosition() < distance) {
+            telemetry.addData("Left Encoder", frontRight.getCurrentPosition());
+            telemetry.update();
+        }
+
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+
+        sleep(500);
+
+    }
+} // end class
