@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name = "OnePlayerMode")
+@TeleOp(name = "OnePlayer")
 
-public class MecanumTeleOp extends LinearOpMode {
+public class OnePlayer extends LinearOpMode {
 
 
 
@@ -72,51 +72,53 @@ public class MecanumTeleOp extends LinearOpMode {
             boolean G1B = gamepad1.b;
             boolean G1X = gamepad1.x;
             boolean G1A = gamepad1.a;
+            boolean G1RightStick = gamepad1.right_stick_button;
             double G1RT = -gamepad1.right_trigger;
             double G1LT = gamepad1.left_trigger;
 
+            double power = 0.65;
 
             //Driving movements
             if (G1rightStickX > 0) {  // Clockwise
-                frontLeft.setPower(0.5);
-                backLeft.setPower(0.5);
-                frontRight.setPower(-0.5);
-                backRight.setPower(-0.5);
-            } else if (G1rightStickX < 0) { // Counterclockwise
-                frontLeft.setPower(-0.5);
-                backLeft.setPower(-0.5);
-                frontRight.setPower(0.5);
-                backRight.setPower(0.5);
-            } else if (G1leftStickY > 0) { // Backwards
-                frontLeft.setPower(-0.5);
-                backLeft.setPower(-0.5);
-                frontRight.setPower(-0.5);
-                backRight.setPower(-0.5);
-            } else if (G1leftStickY < 0) { // Forwards
                 frontLeft.setPower(.5);
                 backLeft.setPower(.5);
+                frontRight.setPower(-.5);
+                backRight.setPower(-.5);
+            } else if (G1rightStickX < 0) { // Counterclockwise
+                frontLeft.setPower(-.5);
+                backLeft.setPower(-.5);
                 frontRight.setPower(.5);
                 backRight.setPower(.5);
+            } else if (G1leftStickY > 0) { // Backwards
+                frontLeft.setPower(-power);
+                backLeft.setPower(-power);
+                frontRight.setPower(-power);
+                backRight.setPower(-power);
+            } else if (G1leftStickY < 0) { // Forwards
+                frontLeft.setPower(power);
+                backLeft.setPower(power);
+                frontRight.setPower(power);
+                backRight.setPower(power);
             } else if (gamepad1.dpad_right) { //strafe right
-                frontLeft.setPower(.6);
-                frontRight.setPower(-.6);
-                backLeft.setPower(-.6);
-                backRight.setPower(.6);
+                frontLeft.setPower(power);
+                frontRight.setPower(-power);
+                backLeft.setPower(-power);
+                backRight.setPower(power);
             } else if (gamepad1.dpad_left) { //strafe left
-                frontLeft.setPower(-.6);
-                frontRight.setPower(.6);
-                backLeft.setPower(.6);
-                backRight.setPower(-.6);
+                frontLeft.setPower(-power);
+                frontRight.setPower(power);
+                backLeft.setPower(power);
+                backRight.setPower(-power);
             } else if (gamepad1.dpad_up) { // forwards
-                frontLeft.setPower(0.65);
-                frontRight.setPower(0.65);
-                backLeft.setPower(0.65);
-                backRight.setPower(0.65);
+                frontLeft.setPower(power);
+                frontRight.setPower(power);
+                backLeft.setPower(power);
+                backRight.setPower(power);
             } else if (gamepad1.dpad_down) { // backwards
-                frontLeft.setPower(-0.65);
-                frontRight.setPower(-0.65);
-                backLeft.setPower(-0.65);
-                backRight.setPower(-0.65);
+                frontLeft.setPower(-power);
+                frontRight.setPower(-power);
+                backLeft.setPower(-power);
+                backRight.setPower(-power);
             } else if (G1Y) { // Intake Forward
                 Intake.setPower(.33);
                 conveyor.setPower(-1);
