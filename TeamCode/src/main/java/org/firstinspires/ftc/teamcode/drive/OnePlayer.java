@@ -19,9 +19,9 @@ public class OnePlayer extends LinearOpMode {
 
     private DcMotor Intake = null;
 
-    private CRServo RightSlide = null;
+   private DcMotor slide = null;
 
-    private CRServo LeftSlide = null;
+   private CRServo drone = null;
 
     private CRServo conveyor = null;
 
@@ -37,12 +37,10 @@ public class OnePlayer extends LinearOpMode {
         backLeft = hardwareMap.get(DcMotor.class,"backLeft"); //backleft, port 3
         backRight = hardwareMap.get(DcMotor.class,"backRight");  //backright, port 2
         Intake = hardwareMap.get(DcMotor.class,"Intake");  //Intake
-
-        RightSlide = hardwareMap.get(CRServo.class,"RightSlide"); // Port 0 Expansion Hub
-        LeftSlide = hardwareMap.get(CRServo.class,"RightSlide"); // Port 0 Control Hub
+        slide = hardwareMap.get(DcMotor.class,"slide");
 
         conveyor = hardwareMap.get(CRServo.class,"conveyor"); // Port 5 Expansion Hub
-
+        drone = hardwareMap.get(CRServo.class,"drone");
 
 
 
@@ -51,9 +49,7 @@ public class OnePlayer extends LinearOpMode {
         backLeft.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.FORWARD);
         Intake.setDirection(DcMotor.Direction.FORWARD);
-
-        RightSlide.setDirection(DcMotorSimple.Direction.FORWARD);
-        LeftSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+        slide.setDirection(DcMotor.Direction.FORWARD);
 
         conveyor.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -75,6 +71,7 @@ public class OnePlayer extends LinearOpMode {
             boolean G1RightStick = gamepad1.right_stick_button;
             double G1RT = -gamepad1.right_trigger;
             double G1LT = gamepad1.left_trigger;
+            boolean G2A = gamepad2.a;
 
             double power = 0.65;
 
@@ -126,14 +123,14 @@ public class OnePlayer extends LinearOpMode {
                 Intake.setPower(-.33);
                 conveyor.setPower(1);
 
-            } else if (gamepad1.left_bumper) {
-                RightSlide.setPower(1);
-                LeftSlide.setPower(1);
+            } else if (G1leftBumper) {
+                slide.setPower(1);
 
 
-            } else if (gamepad1.right_bumper) {
-                RightSlide.setPower(-1);
-                LeftSlide.setPower(-1);
+            } else if (G1rightBumper) {
+                slide.setPower(-1);
+            }else if (G2A){
+                drone.setPower(1);
                 
 
 
@@ -143,9 +140,9 @@ public class OnePlayer extends LinearOpMode {
                 backLeft.setPower(0);
                 backRight.setPower(0);
                 Intake.setPower(0);
-                RightSlide.setPower(0);
-                LeftSlide.setPower(0);
+                slide.setPower(0);
                 conveyor.setPower(0);
+                drone.setPower(0);
             }
 
             telemetry.addData("Status", "Running");

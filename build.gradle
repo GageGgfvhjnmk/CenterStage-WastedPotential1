@@ -1,4 +1,4 @@
-import jdk.internal.jshell.tool.resources.version
+//import jdk.internal.jshell.tool.resources.version
 
 /**
  * Top-level build file for ftc_app project.
