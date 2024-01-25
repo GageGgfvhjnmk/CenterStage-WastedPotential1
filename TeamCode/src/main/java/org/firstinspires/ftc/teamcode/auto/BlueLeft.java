@@ -149,15 +149,15 @@ public class BlueLeft extends LinearOpMode {
 
                 //armUp(0.5,"Up");
                 sleep(250);
-                driveBackward(50,0.3);
+                driveBackward(200,0.3);
                 strafeRight(1750,0.3);
                 sleep(10000);
 
 
                 if (spikeLocation() == 3) {
 
-                    /*
-                    driveBackward(1100,0.3);
+
+                   /* driveBackward(1100,0.3);
                     sleep(100);
                     turnCounterClockwise(650,-0.3);
                     sleep(100);
@@ -167,16 +167,15 @@ public class BlueLeft extends LinearOpMode {
                     driveBackward(100,0.3);
                     turnClockwise(650,-0.3);
                     strafeRight(1500,0.3);
-                     */
-                    /*
-                    intake("stop");
+
+                    intake("stop", 0);
                     turnClockwise(650,-0.3);
 
                     driveBackward(250,0.3);
                     sleep(10);
                     turnClockwise(650,0.3);
                     strafeRight(1500,0.3);
-                    sleep(100000);
+                    sleep(100000); */
 
 
 
@@ -190,20 +189,12 @@ public class BlueLeft extends LinearOpMode {
 
 
                 } else {
-                    /*
-                    driveBackward(900,0.3);
-                    sleep(100);
-                    turnCounterClockwise(650,0.3);
-                    sleep(100);
-                    driveBackward(250,0.3);
-                    sleep(10);
-                    driveForward(250,0.3);
-                    turnClockwise(650,-0.3);
-                    driveForward(300,0.3);
-                    strafeRight(1500,0.3);
-                    sleep(100000);
+                    turnCounterClockwise(600,0.3);
 
-                     */
+                }
+
+
+
                 }
 
                 // Save CPU resources; can resume streaming when needed.
@@ -219,9 +210,9 @@ public class BlueLeft extends LinearOpMode {
         }
 
         // Save more CPU resources when camera is no longer needed.
-        visionPortal.close();
+        //visionPortal.close();
 
-    }   // end runOpMode()
+      // end runOpMode()
 
     /**
      * Initialize the TensorFlow Object Detection processor.
@@ -539,10 +530,10 @@ public class BlueLeft extends LinearOpMode {
         Intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
-        frontLeft.setPower(power);
-        frontRight.setPower(-power);
-        backLeft.setPower(power);
-        backRight.setPower(-power);
+        frontLeft.setPower(-power);
+        frontRight.setPower(power);
+        backLeft.setPower(-power);
+        backRight.setPower(power);
 
         while (frontRight.getCurrentPosition() < distance - 10)  {
             telemetry.addData("Left Encoder", frontRight.getCurrentPosition());
