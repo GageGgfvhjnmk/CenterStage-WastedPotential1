@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -57,16 +58,20 @@ public class BlueLeft extends LinearOpMode {
 
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
-    private DcMotor backRight = null;
     private DcMotor backLeft = null;
+    private DcMotor backRight = null;
 
     private DcMotor Intake = null;
 
-    private CRServo RightSlide = null;
+    private DcMotor lift = null;
 
-    private CRServo LeftSlide = null;
 
     private CRServo conveyor = null;
+
+    private Servo bucket = null;
+
+    private DcMotor slide = null;
+    private CRServo drone = null;
 
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
@@ -97,25 +102,31 @@ public class BlueLeft extends LinearOpMode {
 
         initTfod();
 
-        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
-        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
-        backRight = hardwareMap.get(DcMotor.class, "backRight");
-        Intake = hardwareMap.get(DcMotor.class,"Intake");  //Intake,
+        frontLeft = hardwareMap.get(DcMotor.class,"frontLeft"); //frontleft, port 0
+        frontRight = hardwareMap.get(DcMotor.class,"frontRight");  //frontright, port 1
+        backLeft = hardwareMap.get(DcMotor.class,"backLeft"); //backleft, port 3
+        backRight = hardwareMap.get(DcMotor.class,"backRight");  //backright, port 2
+        Intake = hardwareMap.get(DcMotor.class,"Intake");  //Intake
+        slide = hardwareMap.get(DcMotor.class,"slide");
+        lift = hardwareMap.get(DcMotor.class,"lift");
 
-        RightSlide = hardwareMap.get(CRServo.class,"RightSlide"); // Port 5 Expansion Hub
-        LeftSlide = hardwareMap.get(CRServo.class,"RightSlide"); // Port 0 Control Hub
+        conveyor = hardwareMap.get(CRServo.class,"conveyor"); // Port 5 Expansion Hub
+        bucket = hardwareMap.get(Servo.class, "bucket"); // port 4 Expansion Hub
+        drone = hardwareMap.get(CRServo.class,"drone");
 
-        conveyor = hardwareMap.get(CRServo.class,"conveyor");
 
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        Intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
+        Intake.setDirection(DcMotor.Direction.FORWARD);
+        slide.setDirection(DcMotor.Direction.REVERSE);
+
+
+
+        conveyor.setDirection(DcMotorSimple.Direction.FORWARD);
+        drone.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
         // Wait for the DS start button to be touched.
@@ -136,20 +147,41 @@ public class BlueLeft extends LinearOpMode {
                 // Push telemetry to the Driver Station.
                 telemetry.update();
 
+                //armUp(0.5,"Up");
+                sleep(250);
+                driveBackward(50,0.3);
+                strafeRight(1750,0.3);
+                sleep(10000);
+
+
                 if (spikeLocation() == 3) {
-                    driveBackward(900,0.3);
+
+                    /*
+                    driveBackward(1100,0.3);
                     sleep(100);
+                    turnCounterClockwise(650,-0.3);
+                    sleep(100);
+                    intake("outtake", 0.75);
+                    sleep(900);
+                    intake("stop", 0);
+                    driveBackward(100,0.3);
                     turnClockwise(650,-0.3);
-                    sleep(100);
+                    strafeRight(1500,0.3);
+                     */
+                    /*
+                    intake("stop");
+                    turnClockwise(650,-0.3);
+
                     driveBackward(250,0.3);
                     sleep(10);
-                    driveForward(250,0.3);
-                    turnCounterClockwise(650,0.3);
+                    turnClockwise(650,0.3);
                     strafeRight(1500,0.3);
                     sleep(100000);
 
 
+
                 } else if (spikeLocation() == 2) {
+
                     driveBackward(1350,0.3);
                     sleep(10);
                     driveForward(250,0.3);
@@ -158,6 +190,7 @@ public class BlueLeft extends LinearOpMode {
 
 
                 } else {
+                    /*
                     driveBackward(900,0.3);
                     sleep(100);
                     turnCounterClockwise(650,0.3);
@@ -169,6 +202,8 @@ public class BlueLeft extends LinearOpMode {
                     driveForward(300,0.3);
                     strafeRight(1500,0.3);
                     sleep(100000);
+
+                     */
                 }
 
                 // Save CPU resources; can resume streaming when needed.
@@ -412,14 +447,15 @@ public class BlueLeft extends LinearOpMode {
         sleep(500);
 
     }
-    public void intake(String mode){
+    public void intake(String mode, double power){
         Intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         if (mode == "intake"){
-            Intake.setPower(1);
+            Intake.setPower(power);
         }
+
         if (mode == "outtake"){
-            Intake.setPower(-1);
+            Intake.setPower(-power);
         }
         if (mode == "stop"){
             Intake.setPower(0);
@@ -503,10 +539,10 @@ public class BlueLeft extends LinearOpMode {
         Intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
-        frontLeft.setPower(-power);
-        frontRight.setPower(power);
-        backLeft.setPower(-power);
-        backRight.setPower(power);
+        frontLeft.setPower(power);
+        frontRight.setPower(-power);
+        backLeft.setPower(power);
+        backRight.setPower(-power);
 
         while (frontRight.getCurrentPosition() < distance - 10)  {
             telemetry.addData("Left Encoder", frontRight.getCurrentPosition());
@@ -527,4 +563,71 @@ public class BlueLeft extends LinearOpMode {
         sleep(500);
 
     }
+    public void armDown(double distance, double power) {
+
+        //Reset Encoders
+        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+        slide.setPower(-power);
+
+
+        while (-slide.getCurrentPosition() < distance) {
+            telemetry.addData("Arm Encoder", slide.getCurrentPosition());
+            telemetry.update();
+        }
+
+        slide.setPower(0);
+
+        sleep(500);
+
+    }
+    /*
+    public void armUp(double distance, double power) {
+
+        //Reset Encoders
+        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        slide.setPower(power);
+
+        while (slide.getCurrentPosition() < distance) {
+            telemetry.addData("Slide Encoder", slide.getCurrentPosition());
+            telemetry.update();
+        }
+
+        slide.setPower(0);
+
+        sleep(1000);
+
+    }
+     */
+
+    public void armUp(double power, String mode) {
+
+        //Reset Encoders
+        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        slide.setPower(power);
+        if (mode == "Up"){
+            slide.setPower(power);
+        }
+
+        if (mode == "Down"){
+            slide.setPower(-power);
+        }
+        if (mode == "stop"){
+            slide.setPower(0);
+        }
+
+
+
+        slide.setPower(0);
+
+        sleep(1000);
+
+    }
+
 } // end class

@@ -113,10 +113,9 @@ public class BlueRight extends LinearOpMode {
         // Run Auto
 
 
-        driveBackward(200,0.35);
-        strafeRight(2200,0.35);
+        driveBackward(1500,0.3);
+        strafeRight(2200,0.3);
         sleep(10000);
-
 
 
 

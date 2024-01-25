@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode.auto;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -48,6 +49,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
 @Autonomous(name = "BlueLeftCV ", group = "Concept")
+@Disabled
 public class BlueLeftCV extends LinearOpMode {
 
 
@@ -66,6 +68,7 @@ public class BlueLeftCV extends LinearOpMode {
 
 
     private OpenCvWebcam webcam;
+
 
 
 
