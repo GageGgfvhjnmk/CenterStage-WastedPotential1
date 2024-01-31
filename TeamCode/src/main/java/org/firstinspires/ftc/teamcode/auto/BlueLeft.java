@@ -1,3 +1,5 @@
+// BlueLeft
+
 /* Copyright (c) 2019 FIRST. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -28,8 +30,6 @@
  */
 
 package org.firstinspires.ftc.teamcode.auto;
-
-import static java.lang.Math.abs;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -147,64 +147,55 @@ public class BlueLeft extends LinearOpMode {
                 // Push telemetry to the Driver Station.
                 telemetry.update();
 
-                //armUp(0.5,"Up");
-                sleep(250);
-                driveBackward(50,0.3);
-                strafeRight(1750,0.3);
-                sleep(10000);
+
+
 
 
                 if (spikeLocation() == 3) {
 
-                    /*
-                    driveBackward(1100,0.3);
-                    sleep(100);
-                    turnCounterClockwise(650,-0.3);
-                    sleep(100);
-                    intake("outtake", 0.75);
-                    sleep(900);
-                    intake("stop", 0);
-                    driveBackward(100,0.3);
-                    turnClockwise(650,-0.3);
-                    strafeRight(1500,0.3);
-                     */
-                    /*
-                    intake("stop");
-                    turnClockwise(650,-0.3);
 
-                    driveBackward(250,0.3);
+                    driveBackward(775,0.2);
+                    sleep(100);
+                    turnRight(600,-0.2);
+                    sleep(100);
+                    driveBackward(250,0.2);
+                    driveForward(275,0.2);
+                    turnLeft(680,-0.2);
+                    strafeRight(950,0.2);
                     sleep(10);
-                    turnClockwise(650,0.3);
-                    strafeRight(1500,0.3);
+                    driveForward(800,0.3);
                     sleep(100000);
 
 
 
                 } else if (spikeLocation() == 2) {
 
-                    driveBackward(1350,0.3);
+                    driveBackward(1225,0.2);
                     sleep(10);
-                    driveForward(250,0.3);
-                    strafeRight(1520,0.3);
+                    driveForward(1000,0.2);
+                    strafeRight(1575,0.3);
                     sleep(100000);
 
 
                 } else {
-                    /*
-                    driveBackward(900,0.3);
+
+                    driveBackward(650,0.2);
                     sleep(100);
-                    turnCounterClockwise(650,0.3);
+                    turnLeft(500,-0.3);
                     sleep(100);
-                    driveBackward(250,0.3);
+                    driveBackward(150,0.2);
+                    driveForward(250,0.2);
+                    turnRight(500,-0.3);
+                    driveForward(200,0.3);
+                    strafeRight(1500,0.2);
                     sleep(10);
-                    driveForward(250,0.3);
-                    turnClockwise(650,-0.3);
-                    driveForward(300,0.3);
-                    strafeRight(1500,0.3);
+                    strafeRight(150,0.3)
+                    ;
                     sleep(100000);
 
-                     */
                 }
+
+
 
                 // Save CPU resources; can resume streaming when needed.
                 if (gamepad1.dpad_down) {
@@ -400,7 +391,7 @@ public class BlueLeft extends LinearOpMode {
         backLeft.setPower(power);
         backRight.setPower(-power);
 
-        while (-frontRight.getCurrentPosition() < distance) {
+        while (frontRight.getCurrentPosition() < distance) {
             telemetry.addData("Left Encoder", frontRight.getCurrentPosition());
             telemetry.update();
         }
@@ -485,7 +476,7 @@ public class BlueLeft extends LinearOpMode {
 
         return location;
     }
-    public void turnClockwise(double distance, double power) {
+    public void turnRight(double distance, double power) {
 
         //Reset Encoders
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -494,37 +485,29 @@ public class BlueLeft extends LinearOpMode {
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
-        frontLeft.setPower(-power);
+        frontLeft.setPower(power * -1);
         frontRight.setPower(power);
-        backLeft.setPower(-power);
+        backLeft.setPower(power * -1);
         backRight.setPower(power);
 
-        while (-frontRight.getCurrentPosition() < (abs(distance) - 10))  {
+        while (-frontRight.getCurrentPosition() < distance) {
             telemetry.addData("Left Encoder", frontRight.getCurrentPosition());
             telemetry.update();
         }
 
-        while (-frontRight.getCurrentPosition() < abs(distance)) {
-            telemetry.addData("Left Encoder", frontRight.getCurrentPosition());
-            telemetry.update();
-        }
-
-
-        frontLeft.setPower(0);
         frontRight.setPower(0);
+        frontLeft.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
 
         sleep(500);
 
     }
-    public void turnCounterClockwise(double distance, double power) {
+
+    public void turnLeft(double distance, double power) {
 
         //Reset Encoders
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -533,36 +516,29 @@ public class BlueLeft extends LinearOpMode {
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         frontLeft.setPower(power);
-        frontRight.setPower(-power);
+        frontRight.setPower(power * -1);
         backLeft.setPower(power);
-        backRight.setPower(-power);
-
-        while (frontRight.getCurrentPosition() < distance - 10)  {
-            telemetry.addData("Left Encoder", frontRight.getCurrentPosition());
-            telemetry.update();
-        }
+        backRight.setPower(power * -1);
 
         while (frontRight.getCurrentPosition() < distance) {
             telemetry.addData("Left Encoder", frontRight.getCurrentPosition());
             telemetry.update();
         }
 
-
-        frontLeft.setPower(0);
         frontRight.setPower(0);
+        frontLeft.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
 
         sleep(500);
 
     }
+
+
     public void armDown(double distance, double power) {
 
         //Reset Encoders
