@@ -20,8 +20,14 @@ public class TwoPlayer extends LinearOpMode {
     private DcMotor lift = null;
     private CRServo conveyor = null;
     private Servo bucket = null;
+
+    private CRServo servo_bucket;
     private DcMotor slide = null;
     private CRServo drone = null;
+
+    private DcMotor left_lift = null;
+
+    private DcMotor right_lift = null;
 
     @Override
     public void runOpMode() {
@@ -35,9 +41,10 @@ public class TwoPlayer extends LinearOpMode {
         backRight = hardwareMap.get(DcMotor.class, "backRight");  //backright, port 2
         Intake = hardwareMap.get(DcMotor.class, "Intake");  //Intake
         slide = hardwareMap.get(DcMotor.class, "slide");
-        lift = hardwareMap.get(DcMotor.class, "lift");
+        left_lift = hardwareMap.get(DcMotor.class, "left_lift");
+        right_lift =  hardwareMap.get(DcMotor.class, "right_lift");
 
-        conveyor = hardwareMap.get(CRServo.class, "conveyor"); // Port 5 Expansion Hub
+        servo_bucket = hardwareMap.get(CRServo.class, "conveyor"); // Port 5 Expansion Hub
         bucket = hardwareMap.get(Servo.class, "bucket"); // port 4 Expansion Hub
         drone = hardwareMap.get(CRServo.class, "drone");
 
@@ -48,7 +55,6 @@ public class TwoPlayer extends LinearOpMode {
         backRight.setDirection(DcMotor.Direction.FORWARD);
         Intake.setDirection(DcMotor.Direction.FORWARD);
         slide.setDirection(DcMotor.Direction.REVERSE);
-        //bucket.setDirection(DcMotor.Direction.FORWARD);
 
 
         conveyor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -199,15 +205,15 @@ public class TwoPlayer extends LinearOpMode {
 
             if (G2Y) { // Intake Forward
                 Intake.setPower(0.5);
-                conveyor.setPower(-1);
+                servo_bucket.setPower(1);
+
             } else if (G2A) {
                 Intake.setPower(-.5);
-                conveyor.setPower(1);
+
             } else {
                 Intake.setPower(0);
-                conveyor.setPower(0);
-
             }
+
             if (G2UD) { // Upward
                 slide.setPower(0.85);
             } else if (G2DD) {
@@ -221,13 +227,22 @@ public class TwoPlayer extends LinearOpMode {
                 drone.setPower(1);
             }else    {
                 drone.setPower(0);
-
-
             }
-            if (G2B){
+            if (G1X){
                 bucket.setPosition(0.4);
-            } else {
+            } else if (G1B) {
                 bucket.setPosition(.85);
+            }
+
+            if (G1leftStickX > 0){
+                left_lift.setPower(1);
+                right_lift.setPower(1);
+            } else if (G1leftStickX < 0) {
+                left_lift.setPower(1);
+                right_lift.setPower(1);
+            } else {
+                left_lift.setPower(0);
+                right_lift.setPower(0);
             }
 
 
