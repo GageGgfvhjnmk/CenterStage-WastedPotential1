@@ -60,19 +60,25 @@ public class BlueLeft extends LinearOpMode {
     private DcMotor frontRight = null;
     private DcMotor backLeft = null;
     private DcMotor backRight = null;
-
     private DcMotor Intake = null;
 
-    private DcMotor lift = null;
 
 
-    private CRServo conveyor = null;
 
-    private Servo bucket = null;
+    private CRServo wheel_bucket;
+
+    private Servo left_servo_lift;
+
+    private Servo right_servo_lift;
+
+    private Servo flipper_bucket;
 
     private DcMotor slide = null;
     private CRServo drone = null;
 
+    private DcMotor left_lift = null;
+
+    private DcMotor right_lift = null;
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
@@ -102,17 +108,22 @@ public class BlueLeft extends LinearOpMode {
 
         initTfod();
 
-        frontLeft = hardwareMap.get(DcMotor.class,"frontLeft"); //frontleft, port 0
-        frontRight = hardwareMap.get(DcMotor.class,"frontRight");  //frontright, port 1
-        backLeft = hardwareMap.get(DcMotor.class,"backLeft"); //backleft, port 3
-        backRight = hardwareMap.get(DcMotor.class,"backRight");  //backright, port 2
-        Intake = hardwareMap.get(DcMotor.class,"Intake");  //Intake
-        slide = hardwareMap.get(DcMotor.class,"slide");
-        lift = hardwareMap.get(DcMotor.class,"lift");
+        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft"); //frontleft, port 0
+        frontRight = hardwareMap.get(DcMotor.class, "frontRight");  //frontright, port 1
+        backLeft = hardwareMap.get(DcMotor.class, "backLeft"); //backleft, port 3
+        backRight = hardwareMap.get(DcMotor.class, "backRight");  //backright, port 2
+        Intake = hardwareMap.get(DcMotor.class, "Intake");  //Intake
+        slide = hardwareMap.get(DcMotor.class, "slide");
+        left_lift = hardwareMap.get(DcMotor.class, "left_lift");
+        right_lift =  hardwareMap.get(DcMotor.class, "right_lift");
 
-        conveyor = hardwareMap.get(CRServo.class,"conveyor"); // Port 5 Expansion Hub
-        bucket = hardwareMap.get(Servo.class, "bucket"); // port 4 Expansion Hub
-        drone = hardwareMap.get(CRServo.class,"drone");
+
+        wheel_bucket = hardwareMap.get(CRServo.class, "wheel_bucket"); // Port 5 Expansion Hub
+        flipper_bucket = hardwareMap.get(Servo.class, "flipper_bucket"); // port 4 Expansion Hub
+        drone = hardwareMap.get(CRServo.class, "drone");
+
+        left_servo_lift = hardwareMap.get(Servo.class, "left_servo_lift");
+        right_servo_lift = hardwareMap.get(Servo.class, "right_servo_lift");
 
 
 
@@ -125,7 +136,7 @@ public class BlueLeft extends LinearOpMode {
 
 
 
-        conveyor.setDirection(DcMotorSimple.Direction.FORWARD);
+
         drone.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
@@ -154,43 +165,44 @@ public class BlueLeft extends LinearOpMode {
                 if (spikeLocation() == 3) {
 
 
-                    driveBackward(775,0.2);
+                    driveBackward(600,0.2);
                     sleep(100);
-                    turnRight(600,-0.2);
+                    turnRight(750,-0.2);
                     sleep(100);
-                    driveBackward(250,0.2);
-                    driveForward(275,0.2);
-                    turnLeft(680,-0.2);
-                    strafeRight(950,0.2);
+                    driveBackward(400,0.2);
+                    driveForward(500,0.2);
+                    turnLeft(750,-0.2);
+                    driveForward(350,0.3);
+                    strafeRight(1450,0.2);
                     sleep(10);
-                    driveForward(800,0.3);
+
                     sleep(100000);
 
 
 
                 } else if (spikeLocation() == 2) {
 
-                    driveBackward(1225,0.2);
+                    driveBackward(1275,0.2);
                     sleep(10);
-                    driveForward(1000,0.2);
+                    driveForward(1100,0.2);
                     strafeRight(1575,0.3);
                     sleep(100000);
 
 
                 } else {
 
-                    driveBackward(650,0.2);
+
+
+
+                    driveBackward(350,0.2);
                     sleep(100);
-                    turnLeft(500,-0.3);
+                    turnLeft(600,-0.2);
                     sleep(100);
-                    driveBackward(150,0.2);
-                    driveForward(250,0.2);
-                    turnRight(500,-0.3);
-                    driveForward(200,0.3);
-                    strafeRight(1500,0.2);
-                    sleep(10);
-                    strafeRight(150,0.3)
-                    ;
+                    driveBackward(450,0.2);
+                    driveForward(550,0.2);
+                    turnRight(600,-0.2);
+                    driveForward(1500,0.2);
+                    strafeRight(1450,0.2);
                     sleep(100000);
 
                 }
