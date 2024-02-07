@@ -103,7 +103,6 @@ public class RedLeft extends LinearOpMode {
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
-
         // Wait for the DS start button to be touched.
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch Play to start OpMode");
@@ -112,50 +111,40 @@ public class RedLeft extends LinearOpMode {
 
 
         // Run Auto
+        if (spikeLocation() == 3) {
 
 
-        driveBackward(200,0.35);
-        strafeLeft(2200,0.35);
-        sleep(10000);
+            // Camera Stuff Don't edit
 
+            if (opModeIsActive()) {
+                while (opModeIsActive()) {
 
+                    telemetryTfod();
 
+                    // Push telemetry to the Driver Station.
+                    telemetry.update();
 
+                    // Save CPU resources; can resume streaming when needed.
+                    if (gamepad1.dpad_down) {
+                        visionPortal.stopStreaming();
+                    } else if (gamepad1.dpad_up) {
+                        visionPortal.resumeStreaming();
+                    }
 
-
-
-
-        // Camera Stuff Don't edit
-
-        if (opModeIsActive()) {
-            while (opModeIsActive()) {
-
-                telemetryTfod();
-
-                // Push telemetry to the Driver Station.
-                telemetry.update();
-
-                // Save CPU resources; can resume streaming when needed.
-                if (gamepad1.dpad_down) {
-                    visionPortal.stopStreaming();
-                } else if (gamepad1.dpad_up) {
-                    visionPortal.resumeStreaming();
+                    // Share the CPU.
+                    sleep(20);
                 }
-
-                // Share the CPU.
-                sleep(20);
             }
-        }
 
-        // Save more CPU resources when camera is no longer needed.
-        visionPortal.close();
+            // Save more CPU resources when camera is no longer needed.
+            visionPortal.close();
 
-    }   // end runOpMode()
+        }   // end runOpMode()
 
-    /**
-     * Initialize the TensorFlow Object Detection processor.
-     */
-    private void initTfod() {
+        /**
+         * Initialize the TensorFlow Object Detection processor.
+         */
+        //private void initTfod() {
 
         // Create the TensorFlow processor by using a builder.
         tfod = new TfodProcessor.Builder()
@@ -216,6 +205,9 @@ public class RedLeft extends LinearOpMode {
 
     }   // end method initTfod()
 
+    private void initTfod() {
+    }
+
     /**
      * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
      */
@@ -226,21 +218,11 @@ public class RedLeft extends LinearOpMode {
 
         // Step through the list of recognitions and display info for each one.
         for (Recognition recognition : currentRecognitions) {
-            double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
-            double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
+            double x = (recognition.getLeft() + recognition.getRight()) / 2;
+            double y = (recognition.getTop() + recognition.getBottom()) / 2;
 
-            driveBackward(100, 0.1);
 
-            if (recognition.getLeft() <= 322) {
-                telemetry.addData("Position: ", "center");
-
-            } else if (recognition.getLeft() > 322) {
-                telemetry.addData("Position: ", "right");
-            } else {
-                telemetry.addData("Position: ", "left");
-            }
-
-            telemetry.addData(""," ");
+            telemetry.addData("", " ");
             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
             telemetry.addData("- Position", "%.0f / %.0f", x, y);
             telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
@@ -248,6 +230,7 @@ public class RedLeft extends LinearOpMode {
 
 
     }   // end method telemetryTfod()
+
     public void driveForward(double distance, double power) {
 
         //Reset Encoders
@@ -314,6 +297,7 @@ public class RedLeft extends LinearOpMode {
         sleep(500);
 
     }
+
     public void strafeLeft(double distance, double power) {
 
         //Reset Encoders
@@ -376,6 +360,5 @@ public class RedLeft extends LinearOpMode {
         sleep(500);
 
     }
-
-
-}   // end class
+}
+      
