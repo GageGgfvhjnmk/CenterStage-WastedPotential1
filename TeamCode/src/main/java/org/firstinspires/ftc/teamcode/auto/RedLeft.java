@@ -205,6 +205,10 @@ public class RedLeft extends LinearOpMode {
 
     }   // end method initTfod()
 
+    private int spikeLocation() {
+        return 0;
+    }
+
     private void initTfod() {
     }
 
