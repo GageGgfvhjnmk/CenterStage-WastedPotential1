@@ -213,8 +213,7 @@ public class TwoPlayer extends LinearOpMode {
             }
 
 
-
-            if (G2B) { // Intake Forward
+            if (G1B) { // Intake Forward
                 Intake.setPower(-0.3);
                 wheel_bucket.setPower(-1);
                 flipper_bucket.setPosition(1);
@@ -242,31 +241,33 @@ public class TwoPlayer extends LinearOpMode {
 
 
             }
-            if (G2rightBumper) {
+            if (G1A) {
                 drone.setPower(1);
-            }else    {
+            } else {
                 drone.setPower(0);
             }
-            if (G2X){
+            if (G2X) {
                 flipper_bucket.setPosition(.5);
             } else if (G2B) {
                 flipper_bucket.setPosition(1);
             }
 
-            if (G2leftStickY < 0){
+            if (G1RT > 0) {
                 left_lift.setPower(1);
                 right_lift.setPower(1);
-            } else if (G2leftStickY > 0) {
+            } else if (G1LT > 0) {
                 left_lift.setPower(-1);
                 right_lift.setPower(-1);
             } else {
                 left_lift.setPower(0);
                 right_lift.setPower(0);
             }
-            if (G2A){
+            if (G1rightBumper) {
                 left_servo_lift.setPosition(1);
                 right_servo_lift.setPosition(0);
-            } else if (G2Y) {
+            }else if (G1Y){
+                right_servo_lift.setPosition(0.4);
+             }else if (G1leftBumper) {
                 left_servo_lift.setPosition(0);
                 right_servo_lift.setPosition(.5);
             }
