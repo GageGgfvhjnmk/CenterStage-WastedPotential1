@@ -173,11 +173,11 @@ public class RedLeft extends LinearOpMode {
                     sleep(300);
                     driveForward(300,0.3);
                     sleep(300);
-                    strafeRight(395,0.2);
+                    turnLeft(400,-0.2);
                     sleep(300);
-                    driveBackward(1700,0.3);
+                    driveBackward(1650,0.3);
                     sleep(300);
-                    strafeRight(4500,0.3);
+                    strafeLeft(4500,0.3);
 
                     sleep(100000);
 
