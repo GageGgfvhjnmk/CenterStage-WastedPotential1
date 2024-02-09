@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -8,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "DRIVING")
-
+@Disabled
 public class TwoPlayer extends LinearOpMode {
 
 
@@ -214,43 +215,49 @@ public class TwoPlayer extends LinearOpMode {
 
 
             if (G1B) { // Intake Forward
-                Intake.setPower(-0.3);
-                wheel_bucket.setPower(-1);
-                flipper_bucket.setPosition(1);
+                Intake.setPower(-0.7);
+                //wheel_bucket.setPower(-1);
+                //flipper_bucket.setPosition(1);
 
             } else if (G1X) {
-                Intake.setPower(.3);
+                Intake.setPower(.7);
 
             } else {
                 Intake.setPower(0);
-                wheel_bucket.setPower(0);
+                //wheel_bucket.setPower(0);
             }
 
             if (G1Y) {
+                /*
                 Intake.setPower(-1);
                 wheel_bucket.setPower(-1);
+
+                 */
             }
 
-
+            /*
             if (G2UD) { // Upward
                 slide.setPower(0.85);
             } else if (G2DD) {
                 slide.setPower(-.85);
             } else {
                 slide.setPower(.05);
-
-
             }
+
+             */
             if (G1A) {
                 drone.setPower(1);
             } else {
                 drone.setPower(0);
             }
+            /*
             if (G2X) {
                 flipper_bucket.setPosition(.5);
             } else if (G2B) {
                 flipper_bucket.setPosition(1);
             }
+
+             */
 
             if (G1RT > 0) {
                 left_lift.setPower(1);

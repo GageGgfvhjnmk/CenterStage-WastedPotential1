@@ -1,4 +1,4 @@
-// BlueLeft
+// BlueBackstage
 
 /* Copyright (c) 2019 FIRST. All rights reserved.
  *
@@ -53,8 +53,8 @@ import java.util.List;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
-@Autonomous(name = "BlueLeft", group = "Concept")
-public class BlueLeft extends LinearOpMode {
+@Autonomous(name = "BlueAudience", group = "Concept")
+public class BlueAudience extends LinearOpMode {
 
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
@@ -76,6 +76,7 @@ public class BlueLeft extends LinearOpMode {
     private DcMotor left_lift = null;
 
     private DcMotor right_lift = null;
+
 
 
 
@@ -134,6 +135,11 @@ public class BlueLeft extends LinearOpMode {
         slide.setDirection(DcMotor.Direction.REVERSE);
 
 
+
+
+        drone.setDirection(DcMotorSimple.Direction.FORWARD);
+
+
         // Wait for the DS start button to be touched.
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch Play to start OpMode");
@@ -155,56 +161,77 @@ public class BlueLeft extends LinearOpMode {
 
 
 
+
                 if (spikeLocation() == 3) {
 
-
-                    driveBackward(775,0.2);
-                    sleep(100);
-                    turnRight(600,-0.2);
-                    sleep(100);
-                    driveBackward(250,0.2);
-                    driveForward(275,0.2);
-                    turnLeft(680,-0.2);
-                    strafeRight(950,0.2);
+                    driveBackward(450,0.2);
+                    sleep(300);
+                    strafeLeft(325,0.2);
+                    sleep(300);
+                    driveBackward(300,0.2);
+                    sleep(300);
+                    driveForward(300,0.2);
+                    sleep(300);
+                    strafeRight(395,0.2);
+                    sleep(300);
+                    driveBackward(1700,0.2);
+                    sleep(300);
+                    strafeRight(4500,0.2);
                     sleep(10);
-                    driveForward(800,0.3);
                     intake("outtake",0.5);
                     sleep(500);
                     intake("stop",0);
+                    sleep(100000);
+
+
+                    sleep(100000);
+
+
+
                     sleep(100000);
 
 
 
                 } else if (spikeLocation() == 2) {
 
-                    driveBackward(1225,0.2);
+                    driveBackward(1275,0.2);
                     sleep(10);
-                    driveForward(1000,0.2);
-                    strafeRight(1650,0.3);
+                    driveForward(300,0.2);
+                    strafeLeft(600,0.2);
+                    driveBackward(1275,0.2);
+                    strafeRight(4700,0.25);
+                    sleep(10);
                     intake("outtake",0.5);
                     sleep(500);
                     intake("stop",0);
                     sleep(100000);
+
+
                     sleep(100000);
 
 
                 } else {
 
+
+
+
                     driveBackward(650,0.2);
-                    sleep(100);
-                    turnLeft(500,-0.3);
-                    sleep(100);
-                    driveBackward(150,0.2);
-                    driveForward(250,0.2);
-                    turnRight(500,-0.3);
-                    driveForward(200,0.3);
-                    strafeRight(1500,0.2);
                     sleep(10);
-                    strafeRight(150,0.3);
+                    turnLeft(600,-0.2);
+                    driveBackward(550,0.2);
+                    driveForward(450,0.2);
+                    turnRight(600,-0.2);
+                    driveBackward(1375,0.2);
+                    strafeRight(4700,0.2);
+                    sleep(10);
                     intake("outtake",0.5);
                     sleep(500);
                     intake("stop",0);
                     sleep(100000);
+
+
+
+
                     sleep(100000);
 
                 }
@@ -475,10 +502,10 @@ public class BlueLeft extends LinearOpMode {
 
         for (Recognition recognition : currentRecognitions) {
 
-            if (recognition.getLeft() <= 322) {
+            if (recognition.getLeft() <= 275) {
                 location = 2;
                 telemetry.addData("Spike mark location: ", "center");
-            } else if (recognition.getLeft() > 322) {
+            } else if (recognition.getLeft() > 275) {
                 location = 3;
                 telemetry.addData("Spike mark location: ", "right");
             } else {
@@ -573,7 +600,7 @@ public class BlueLeft extends LinearOpMode {
         sleep(500);
 
     }
-
+    /*
     public void armUp(double distance, double power) {
 
         //Reset Encoders
@@ -592,8 +619,32 @@ public class BlueLeft extends LinearOpMode {
         sleep(1000);
 
     }
+     */
+
+    public void armUp(double power, String mode) {
+
+        //Reset Encoders
+        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        slide.setPower(power);
+        if (mode == "Up"){
+            slide.setPower(power);
+        }
+
+        if (mode == "Down"){
+            slide.setPower(-power);
+        }
+        if (mode == "stop"){
+            slide.setPower(0);
+        }
 
 
 
+        slide.setPower(0);
+
+        sleep(1000);
+
+    }
 
 } // end class

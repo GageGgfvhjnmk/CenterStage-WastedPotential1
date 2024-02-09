@@ -1,4 +1,4 @@
-// BlueLeft
+// BlueBackstage
 
 /* Copyright (c) 2019 FIRST. All rights reserved.
  *
@@ -54,7 +54,7 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
 @Autonomous(name = "RedAudience", group = "Concept")
-public class RedLeft extends LinearOpMode {
+public class RedAudience extends LinearOpMode {
 
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
