@@ -1,4 +1,4 @@
-// BlueLeft
+// BlueBackstage
 
 /* Copyright (c) 2019 FIRST. All rights reserved.
  *
@@ -53,8 +53,8 @@ import java.util.List;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
-@Autonomous(name = "BlueRight", group = "Concept")
-public class BlueRight extends LinearOpMode {
+@Autonomous(name = "BlueAudience", group = "Concept")
+public class BlueAudience extends LinearOpMode {
 
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
@@ -164,19 +164,25 @@ public class BlueRight extends LinearOpMode {
 
                 if (spikeLocation() == 3) {
 
-                    driveBackward(450,0.3);
+                    driveBackward(450,0.2);
                     sleep(300);
-                    strafeLeft(360,0.3);
+                    strafeLeft(325,0.2);
                     sleep(300);
-                    driveBackward(300,0.3);
+                    driveBackward(300,0.2);
                     sleep(300);
-                    driveForward(300,0.3);
+                    driveForward(300,0.2);
                     sleep(300);
                     strafeRight(395,0.2);
                     sleep(300);
-                    driveBackward(1700,0.3);
+                    driveBackward(1700,0.2);
                     sleep(300);
-                    strafeRight(4500,0.3);
+                    strafeRight(4500,0.2);
+                    sleep(10);
+                    intake("outtake",0.5);
+                    sleep(500);
+                    intake("stop",0);
+                    sleep(100000);
+
 
                     sleep(100000);
 
@@ -192,8 +198,14 @@ public class BlueRight extends LinearOpMode {
                     sleep(10);
                     driveForward(300,0.2);
                     strafeLeft(600,0.2);
-                    driveBackward(1200,0.2);
-                    strafeRight(4700,0.3);
+                    driveBackward(1275,0.2);
+                    strafeRight(4700,0.25);
+                    sleep(10);
+                    intake("outtake",0.5);
+                    sleep(500);
+                    intake("stop",0);
+                    sleep(100000);
+
 
                     sleep(100000);
 
@@ -211,6 +223,12 @@ public class BlueRight extends LinearOpMode {
                     turnRight(600,-0.2);
                     driveBackward(1375,0.2);
                     strafeRight(4700,0.2);
+                    sleep(10);
+                    intake("outtake",0.5);
+                    sleep(500);
+                    intake("stop",0);
+                    sleep(100000);
+
 
 
 
@@ -484,10 +502,10 @@ public class BlueRight extends LinearOpMode {
 
         for (Recognition recognition : currentRecognitions) {
 
-            if (recognition.getLeft() <= 322) {
+            if (recognition.getLeft() <= 275) {
                 location = 2;
                 telemetry.addData("Spike mark location: ", "center");
-            } else if (recognition.getLeft() > 322) {
+            } else if (recognition.getLeft() > 275) {
                 location = 3;
                 telemetry.addData("Spike mark location: ", "right");
             } else {

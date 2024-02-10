@@ -1,4 +1,4 @@
-// BlueLeft
+// BlueBackstage
 
 /* Copyright (c) 2019 FIRST. All rights reserved.
  *
@@ -35,7 +35,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -53,8 +52,8 @@ import java.util.List;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
-@Autonomous(name = "BlueLeft", group = "Concept")
-public class BlueLeft extends LinearOpMode {
+@Autonomous(name = "BlueBackstage", group = "Concept")
+public class BlueBackstage extends LinearOpMode {
 
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
@@ -158,16 +157,16 @@ public class BlueLeft extends LinearOpMode {
                 if (spikeLocation() == 3) {
 
 
-                    driveBackward(775,0.2);
+                    driveBackward(600,0.2);
                     sleep(100);
                     turnRight(600,-0.2);
                     sleep(100);
-                    driveBackward(250,0.2);
-                    driveForward(275,0.2);
-                    turnLeft(680,-0.2);
-                    strafeRight(950,0.2);
+                    driveBackward(375,0.2);
+                    driveForward(325,0.2);
+                    turnLeft(600,-0.2);
+                    driveForward(425,0.3);
+                    strafeRight(1900  ,0.2);
                     sleep(10);
-                    driveForward(800,0.3);
                     intake("outtake",0.5);
                     sleep(500);
                     intake("stop",0);
@@ -177,10 +176,10 @@ public class BlueLeft extends LinearOpMode {
 
                 } else if (spikeLocation() == 2) {
 
-                    driveBackward(1200,0.2);
+                    driveBackward(1252,0.2);
                     sleep(10);
-                    driveForward(950,0.2);
-                    strafeRight(1650,0.3);
+                    driveForward(1000,0.2);
+                    strafeRight(1850,0.3);
                     intake("outtake",0.5);
                     sleep(500);
                     intake("stop",0);
@@ -190,22 +189,21 @@ public class BlueLeft extends LinearOpMode {
 
                 } else {
 
-                    driveBackward(650,0.2);
+                    driveBackward(350,0.2);
                     sleep(100);
-                    turnLeft(500,-0.3);
+                    strafeRight(525,0.2);
                     sleep(100);
-                    driveBackward(125,0.2);
-                    driveForward(225,0.2);
-                    turnRight(500,-0.3);
-                    driveForward(200,0.3);
-                    strafeRight(1500,0.2);
+                    driveBackward(150,0.2);
+                    driveForward(350,0.2);
+                    strafeRight(1675,0.2);
                     sleep(10);
-                    strafeRight(150,0.3);
                     intake("outtake",0.5);
                     sleep(500);
                     intake("stop",0);
+                    sleep(100);
+                    driveBackward(50,0.2);
                     sleep(100000);
-                    sleep(100000);
+
 
                 }
 
