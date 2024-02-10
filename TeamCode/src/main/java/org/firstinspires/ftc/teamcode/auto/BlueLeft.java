@@ -177,9 +177,9 @@ public class BlueLeft extends LinearOpMode {
 
                 } else if (spikeLocation() == 2) {
 
-                    driveBackward(1225,0.2);
+                    driveBackward(1200,0.2);
                     sleep(10);
-                    driveForward(1000,0.2);
+                    driveForward(950,0.2);
                     strafeRight(1650,0.3);
                     intake("outtake",0.5);
                     sleep(500);
@@ -194,8 +194,8 @@ public class BlueLeft extends LinearOpMode {
                     sleep(100);
                     turnLeft(500,-0.3);
                     sleep(100);
-                    driveBackward(150,0.2);
-                    driveForward(250,0.2);
+                    driveBackward(125,0.2);
+                    driveForward(225,0.2);
                     turnRight(500,-0.3);
                     driveForward(200,0.3);
                     strafeRight(1500,0.2);

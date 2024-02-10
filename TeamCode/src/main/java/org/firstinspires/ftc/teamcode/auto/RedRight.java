@@ -1,3 +1,5 @@
+// BlueLeft
+
 /* Copyright (c) 2019 FIRST. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,8 +31,6 @@
 
 package org.firstinspires.ftc.teamcode.auto;
 
-import static java.lang.Math.abs;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -60,31 +60,37 @@ public class RedRight extends LinearOpMode {
     private DcMotor frontRight = null;
     private DcMotor backLeft = null;
     private DcMotor backRight = null;
-
     private DcMotor Intake = null;
 
-    private DcMotor lift = null;
+    private CRServo wheel_bucket;
 
+    private Servo left_servo_lift;
 
-    private CRServo conveyor = null;
+    private Servo right_servo_lift;
 
-    private Servo bucket = null;
+    private Servo flipper_bucket;
 
     private DcMotor slide = null;
     private CRServo drone = null;
+
+    private DcMotor left_lift = null;
+
+    private DcMotor right_lift = null;
+
 
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
     // TFOD_MODEL_ASSET points to a model file stored in the project Asset location,
     // this is only used for Android Studio when using models in Assets.
-    private static final String TFOD_MODEL_ASSET = "Blue_hat.tflite";
+    private static final String TFOD_MODEL_ASSET = "Red_hat.tflite";
     // TFOD_MODEL_FILE points to a model file stored onboard the Robot Controller's storage,
     // this is used when uploading models directly to the RC using the model upload interface.
-    //private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/Red_hat.tflite";
+    //private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/red_hatv3.tflite";
     // Define the labels recognized in the model for TFOD (must be in training order!)
     private static final String[] LABELS = {
-            "blue_hat",
+            "red_hat",
+            "e",
     };
 
     /**
@@ -102,17 +108,22 @@ public class RedRight extends LinearOpMode {
 
         initTfod();
 
-        frontLeft = hardwareMap.get(DcMotor.class,"frontLeft"); //frontleft, port 0
-        frontRight = hardwareMap.get(DcMotor.class,"frontRight");  //frontright, port 1
-        backLeft = hardwareMap.get(DcMotor.class,"backLeft"); //backleft, port 3
-        backRight = hardwareMap.get(DcMotor.class,"backRight");  //backright, port 2
-        Intake = hardwareMap.get(DcMotor.class,"Intake");  //Intake
-        slide = hardwareMap.get(DcMotor.class,"slide");
-        lift = hardwareMap.get(DcMotor.class,"lift");
+        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft"); //frontleft, port 0
+        frontRight = hardwareMap.get(DcMotor.class, "frontRight");  //frontright, port 1
+        backLeft = hardwareMap.get(DcMotor.class, "backLeft"); //backleft, port 3
+        backRight = hardwareMap.get(DcMotor.class, "backRight");  //backright, port 2
+        Intake = hardwareMap.get(DcMotor.class, "Intake");  //Intake
+        slide = hardwareMap.get(DcMotor.class, "slide");
+        left_lift = hardwareMap.get(DcMotor.class, "left_lift");
+        right_lift =  hardwareMap.get(DcMotor.class, "right_lift");
 
-        conveyor = hardwareMap.get(CRServo.class,"conveyor"); // Port 5 Expansion Hub
-        bucket = hardwareMap.get(Servo.class, "bucket"); // port 4 Expansion Hub
-        drone = hardwareMap.get(CRServo.class,"drone");
+
+        wheel_bucket = hardwareMap.get(CRServo.class, "wheel_bucket"); // Port 5 Expansion Hub
+        flipper_bucket = hardwareMap.get(Servo.class, "flipper_bucket"); // port 4 Expansion Hub
+        drone = hardwareMap.get(CRServo.class, "drone");
+
+        left_servo_lift = hardwareMap.get(Servo.class, "left_servo_lift");
+        right_servo_lift = hardwareMap.get(Servo.class, "right_servo_lift");
 
 
 
@@ -122,11 +133,6 @@ public class RedRight extends LinearOpMode {
         backRight.setDirection(DcMotor.Direction.FORWARD);
         Intake.setDirection(DcMotor.Direction.FORWARD);
         slide.setDirection(DcMotor.Direction.REVERSE);
-
-
-
-        conveyor.setDirection(DcMotorSimple.Direction.FORWARD);
-        drone.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
         // Wait for the DS start button to be touched.
@@ -147,64 +153,64 @@ public class RedRight extends LinearOpMode {
                 // Push telemetry to the Driver Station.
                 telemetry.update();
 
-                armUp(0.5,"Up");
-                sleep(250);
-                driveBackward(50,0.3);
-                strafeLeft(1750,0.3);
-                sleep(10000);
+
 
 
                 if (spikeLocation() == 3) {
 
-                    /*
-                    driveBackward(1100,0.3);
-                    sleep(100);
-                    turnCounterClockwise(650,-0.3);
-                    sleep(100);
-                    intake("outtake", 0.75);
-                    sleep(900);
-                    intake("stop", 0);
-                    driveBackward(100,0.3);
-                    turnClockwise(650,-0.3);
-                    strafeRight(1500,0.3);
-                     */
-                    /*
-                    intake("stop");
-                    turnClockwise(650,-0.3);
 
-                    driveBackward(250,0.3);
+                    driveBackward(775,0.2);
+                    sleep(100);
+                    turnRight(600,-0.2);
+                    sleep(100);
+                    driveBackward(250,0.2);
+                    driveForward(275,0.2);
+                    turnLeft(1500,-0.2);
+                    strafeRight(600,0.2);
                     sleep(10);
-                    turnClockwise(650,0.3);
-                    strafeRight(1500,0.3);
+                    driveForward(1200,0.3);
+                    intake("outtake",0.5);
+                    sleep(500);
+                    intake("stop",0);
                     sleep(100000);
 
 
 
                 } else if (spikeLocation() == 2) {
 
-                    driveBackward(1350,0.3);
+                    driveBackward(1225,0.2);
                     sleep(10);
-                    driveForward(250,0.3);
-                    strafeRight(1520,0.3);
+                    driveForward(1000,0.2);
+                    strafeLeft(1650,0.3);
+                    intake("outtake",0.5);
+                    sleep(500);
+                    intake("stop",0);
+                    sleep(100000);
                     sleep(100000);
 
 
                 } else {
-                    /*
-                    driveBackward(900,0.3);
+
+                    driveBackward(650,0.2);
                     sleep(100);
-                    turnCounterClockwise(650,0.3);
+                    turnRight(500,-0.3);
                     sleep(100);
-                    driveBackward(250,0.3);
+                    driveBackward(150,0.2);
+                    driveForward(250,0.2);
+                    turnLeft(500,-0.3);
+                    driveForward(200,0.3);
+                    strafeLeft(1500,0.2);
                     sleep(10);
-                    driveForward(250,0.3);
-                    turnClockwise(650,-0.3);
-                    driveForward(300,0.3);
-                    strafeRight(1500,0.3);
+                    strafeLeft(150,0.3);
+                    intake("outtake",0.5);
+                    sleep(500);
+                    intake("stop",0);
+                    sleep(100000);
                     sleep(100000);
 
-                     */
                 }
+
+
 
                 // Save CPU resources; can resume streaming when needed.
                 if (gamepad1.dpad_down) {
@@ -400,7 +406,7 @@ public class RedRight extends LinearOpMode {
         backLeft.setPower(power);
         backRight.setPower(-power);
 
-        while (-frontRight.getCurrentPosition() < distance) {
+        while (frontRight.getCurrentPosition() < distance) {
             telemetry.addData("Left Encoder", frontRight.getCurrentPosition());
             telemetry.update();
         }
@@ -485,7 +491,7 @@ public class RedRight extends LinearOpMode {
 
         return location;
     }
-    public void turnClockwise(double distance, double power) {
+    public void turnRight(double distance, double power) {
 
         //Reset Encoders
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -494,37 +500,29 @@ public class RedRight extends LinearOpMode {
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
-        frontLeft.setPower(-power);
+        frontLeft.setPower(power * -1);
         frontRight.setPower(power);
-        backLeft.setPower(-power);
+        backLeft.setPower(power * -1);
         backRight.setPower(power);
 
-        while (-frontRight.getCurrentPosition() < (abs(distance) - 10))  {
+        while (-frontRight.getCurrentPosition() < distance) {
             telemetry.addData("Left Encoder", frontRight.getCurrentPosition());
             telemetry.update();
         }
 
-        while (-frontRight.getCurrentPosition() < abs(distance)) {
-            telemetry.addData("Left Encoder", frontRight.getCurrentPosition());
-            telemetry.update();
-        }
-
-
-        frontLeft.setPower(0);
         frontRight.setPower(0);
+        frontLeft.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
 
         sleep(500);
 
     }
-    public void turnCounterClockwise(double distance, double power) {
+
+    public void turnLeft(double distance, double power) {
 
         //Reset Encoders
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -533,36 +531,29 @@ public class RedRight extends LinearOpMode {
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         frontLeft.setPower(power);
-        frontRight.setPower(-power);
+        frontRight.setPower(power * -1);
         backLeft.setPower(power);
-        backRight.setPower(-power);
-
-        while (frontRight.getCurrentPosition() < distance - 10)  {
-            telemetry.addData("Left Encoder", frontRight.getCurrentPosition());
-            telemetry.update();
-        }
+        backRight.setPower(power * -1);
 
         while (frontRight.getCurrentPosition() < distance) {
             telemetry.addData("Left Encoder", frontRight.getCurrentPosition());
             telemetry.update();
         }
 
-
-        frontLeft.setPower(0);
         frontRight.setPower(0);
+        frontLeft.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
 
         sleep(500);
 
     }
+
+
     public void armDown(double distance, double power) {
 
         //Reset Encoders
@@ -583,7 +574,7 @@ public class RedRight extends LinearOpMode {
         sleep(500);
 
     }
-    /*
+
     public void armUp(double distance, double power) {
 
         //Reset Encoders
@@ -602,32 +593,8 @@ public class RedRight extends LinearOpMode {
         sleep(1000);
 
     }
-     */
-
-    public void armUp(double power, String mode) {
-
-        //Reset Encoders
-        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        slide.setPower(power);
-        if (mode == "Up"){
-            slide.setPower(power);
-        }
-
-        if (mode == "Down"){
-            slide.setPower(-power);
-        }
-        if (mode == "stop"){
-            slide.setPower(0);
-        }
 
 
 
-        slide.setPower(0);
-
-        sleep(1000);
-
-    }
 
 } // end class
